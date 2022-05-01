@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 # Create redirect
-INDEX_COPY="Holberton School for the win!"
+INDEX_COPY="Hello World!"
 
 sudo apt-get -y update
 sudo apt-get -y install nginx
-echo "$INDEX_COPY" | sudo tee /var/www/html/index.nginx-debian.html > /dev/null
-sudo sed -i '/^\sserver_name.*/a \        rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
-sudo service nginx start
+sudo echo "$INDEX_COPY" > /var/www/html/index.nginx-debian.html
+#regex /^\sserver_name.*/a \ finds the line starting with server_name and places the rewrite script in the next line in the sites-available/default file
+sudo sed -i '/^\sserver_name.*/a \        rewrite ^/redirect_me https://www.google.com permanent;' /etc/nginx/sites-available/default
+if ["$(pgrep -c nginx)" -le 0]; then
+	service nginx start
+else
+	service nginx restart
+fi
